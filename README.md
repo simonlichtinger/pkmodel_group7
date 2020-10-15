@@ -1,2 +1,3 @@
-# 2020-software-engineering-projects-pk
-starter pk modelling repository
+# PKMODEL - DTC Software engineering course project, group7
+
+Private repository, for collaboration during the mini-project week.
