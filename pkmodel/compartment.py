@@ -24,8 +24,8 @@ class Compartment:
         :param in_func: First input function the Compartment is set up with, eg. dosing function.
         :param out_func: First output function the Compartment is set up with, eg. circulation elimination.
         """
-        self.input_funcs = [in_func]
-        self.output_funcs = [out_func]
+        self.input_funcs = [in_func] if in_func != None else []
+        self.output_funcs = [out_func] if out_func != None else []
         self.index = index
         self.volume = volume
 
@@ -37,10 +37,10 @@ class Compartment:
         :param q: Vector (list) of drug mass in all compartments.
         :returns: Value of the RHS of the compartment differential equation.
         """
-        try:
-            return sum([func(t,q) for func in self.input_funcs]) - sum([func(t,q) for func in self.output_funcs])
-        except TypeError:
-            raise TypeError("All inputs and outputs must be functions which take 2 arguments: time t and concentration vector q.")
+        #try:
+        return sum([func(t,q) for func in self.input_funcs]) - sum([func(t,q) for func in self.output_funcs])
+        #except TypeError:
+        #    raise TypeError("All inputs and outputs must be functions which take 2 arguments: time t and mass distribution vector q.")
 
 
 
