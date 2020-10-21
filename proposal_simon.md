@@ -38,7 +38,7 @@
 
 **save_json()** and **load_json(filename)** could be nice features to implement.
 
-**init**: not do particularly much, to enable initialisation from different sourced ...
+**init**: not do particularly much, choose initialisation method for the model
 
 **create_model(*args)**: creates a basic model with one compartment
 
