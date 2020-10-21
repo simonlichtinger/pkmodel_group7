@@ -30,7 +30,7 @@
 
 **add_sibling(node, name, *args)**: Creates a sibling to an existing node, by making a circle of inputs and outputs.
 
-**add_connection(node1, node2, *args, exchange=False)**: This assigns input and output functions as needed to two nodes, to connect them -- if not created via the other add_* functions.
+**add_input(node1, node2, *args, exchange=False)** // **add_output(node1, node2, *args, exchange=False)**: This assigns input and output functions as needed to two nodes, to connect them -- if not created via the other add_* functions.
 
 **differential_eq(t,q)**: Gathers the differential_eq's from moduels, which is easy because the LHS's are already separated, smth like ```[node.differential_eq(t,q) for node in copartments]```
 
