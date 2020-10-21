@@ -34,7 +34,7 @@ class Compartment:
         differential equation dq_i / dt = differential_eq(t,q) for this Compartment.
 
         :param t: Time point
-        :param q: Vector (list) of concentration in all compartments.
+        :param q: Vector (list) of drug mass in all compartments.
         :returns: Value of the RHS of the compartment differential equation.
         """
         try:
