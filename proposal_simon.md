@@ -14,11 +14,11 @@
 
 **differential_eq(t,q)**: Returns the sum of all input and output functions
 
-**__init__(*args)**: sets up the input and output funcs as required
+**__init__(index, volume, in_func, out_func)**: sets up the input and output funcs as required
 
 =============
 
-# class Network:
+# class PKModel:
 
 **resolving_indices**: Dict to hold trivial names for compartment indices
 
@@ -36,7 +36,7 @@
 
 **solve(initial_conditions,t_range)**: Uses scipy.integrate.solve_ivp to solve the equation given by differential_eq(t,q). Returns a scipy solution object.
 
-**save_json** and **load_json** could be nice features to implement.
+**save_json()** and **load_json(filename)** could be nice features to implement.
 
 =============
 
@@ -44,9 +44,9 @@
 
 This will hold several predefined model functions, like zeroth, first, etc order decays or equilibrium exchange. Will have the form ```func(t,q,*args)``` and will be stored internally via something like ```specific_func = lambda t,q: func(t,q,*args)```
 
-**plot_solution(solution)**: Uses matplotlib to plot the output graph for a solution object.
+**plot_solution(solution, *args)**: Uses matplotlib to plot the output graph for a solution object.
 
-(**plot_network(network)**: Would be nice feature to implement, to get a graphical representation of the network ...)
+(**plot_model(pkmodel)**: Would be nice feature to implement, to get a graphical representation of the network ...)
 
 =============
 
