@@ -9,13 +9,11 @@ Welcome to PK Modelling's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   
-.. automodule:: __init__
-   :members:
 
 Compartment
 =====================
-.. autoclass:: compartment
+.. py:module:: compartment
+.. autoclass:: Compartment
    :members:
 
 PK Analysis
