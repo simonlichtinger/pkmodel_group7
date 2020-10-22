@@ -10,8 +10,6 @@ Welcome to PK Modelling's documentation!
    :maxdepth: 2
    :caption: Contents:
    
-Main
-===================
 .. automodule:: __init__
    :members:
 
