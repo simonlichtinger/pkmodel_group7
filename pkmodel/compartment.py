@@ -38,9 +38,9 @@ class Compartment:
         :param q: Vector (list) of drug mass in all compartments.
         :returns: Value of the RHS of the compartment differential equation.
         """
-        # try:
-        return sum([func(t, q) for func in self.input_funcs]) - sum(
-            [func(t, q) for func in self.output_funcs]
-        )
-        # except TypeError:
-        #    raise TypeError("All inputs and outputs must be functions which take 2 arguments: time t and mass distribution vector q.")
+        try:
+            return sum([func(t, q) for func in self.input_funcs]) - sum(
+                [func(t, q) for func in self.output_funcs]
+            )
+        except TypeError:
+            raise TypeError("All inputs and outputs must be functions which take 2 arguments: time t and mass distribution vector q.")
