@@ -345,11 +345,7 @@ class PKModel:
         pos = nx.spectral_layout(G)  # positions for all nodes
 
         nx.draw_networkx_nodes(G, pos, node_size=0)
-        nx.draw_networkx_edges(G, pos, 
-            width=2,arrowstyle="->",arrowsize=20, 
-            min_source_margin=30, min_target_margin=30,
-            connectionstyle='arc3,rad=0.2'
-        )
+        nx.draw_networkx_edges(G, pos, width=2,arrowstyle="->",arrowsize=20, min_source_margin=30, min_target_margin=30, connectionstyle='arc3,rad=0.2')
 
         nx.draw_networkx_labels(G, pos, font_size=12, font_family="sans-serif")
 
