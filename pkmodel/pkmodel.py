@@ -4,7 +4,7 @@ from .compartment import Compartment
 import scipy.integrate
 import numpy as np
 
-from .functions import zeroth_order, first_order, dose_constant, dose_steady
+from .functions import first_order, dose_constant, dose_steady
 
 
 class PKModel:
