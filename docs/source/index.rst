@@ -10,9 +10,7 @@ Welcome to PK Modelling's documentation!
    :maxdepth: 2
    :caption: Contents:
    
-this is text that changed
-
-.. automodule:: compartment
+.. autoclass:: compartment
    :members:
 
 .. automodule:: pkanalysis
@@ -21,7 +19,6 @@ this is text that changed
 .. automodule:: pkmodel
    :members:
    
-this is text
 
 Indices and tables
 ==================
