@@ -24,12 +24,13 @@ class PKModel:
         -   add_output:             Manually add an output function to a node.
         -   differential_eq:        The complete set of differential equations for all compartments.
         -   solve:                  Solve the ODEs for some initial conditions using the scipy module.
-        -   load_json:              To be implemented!
-        -   save_json:              To be implemented!
 
         -   __init__:               Basic initialisation, no model created.
         -   __add_new_index:        Utility method to handle insertion of a new node into the dictionary.
         -   _permute_list_indices:  Simple utility to permute two list indices.
+
+    Properties:
+        -   get_compartment_names:  Returns a list of all compartment names of the model, in order of their index.
     """
 
     def __init__(self) -> None:
@@ -294,3 +295,11 @@ class PKModel:
             y0=q0,
             t_eval=t_eval,
         )
+    
+    @property
+    def get_compartment_names(self) -> list:
+        """ Get names of compartments currently stored in the model.
+
+        :returns:   list of all keys of the dictionary holding the names of compartments.
+        """
+        return list(self._resolving_indices.keys())

@@ -125,6 +125,10 @@ def test_against_prototype():  # Test against model 1 of the prototype
     test_model.create_model("main", 1)
     test_model.add_sibling("main", "peripheral", 1)
 
+    names = test_model.get_compartment_names
+    names_desired = ["main", "peripheral"]
+    assert names == names_desired
+
     proto_out = prototype_model_1()
     model_out = test_model.solve(np.linspace(0, 1, 1000), np.array([0.0, 0.0]))
 
