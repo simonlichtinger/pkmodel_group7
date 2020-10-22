@@ -4,14 +4,7 @@ from .compartment import Compartment
 import scipy.integrate
 import numpy as np
 
-# from template_functions import zeroth_order
-# This would be nicer later, now just use some dummy functions for zeroth and first order to be able to implement and test
-def zeroth_order(t: float, q: list, time_constant: float) -> float:
-    return time_constant
-
-
-def first_order(t: float, q: list, time_constant: float, input_index: int) -> float:
-    return time_constant * q[input_index]
+from .functions import zeroth_order, first_order, dose_constant, dose_steady
 
 
 class PKModel:
@@ -48,8 +41,9 @@ class PKModel:
         self,
         name: str,
         volume: float,
-        dosing_func=zeroth_order,
+        dosing_func=dose_constant,
         dosing_time_constant: float = 1,
+        dosing_time_windows: list = [(0,1),(2,3)],
         elimination_func=first_order,
         elimination_time_constant: float = 1,
     ) -> None:
@@ -58,19 +52,22 @@ class PKModel:
 
         :param name:                        name of the compartment
         :param volume:                      volume of the compartment
-        :param dosing_func:                 (optional) Specify the dosing function as input to the compartment. Default is zeroth order (constant). If a user-defined function is specified, it needs to have parameters already built-in, ie taking only time t and mass distribution vector q arguments.
+        :param dosing_func:                 (optional) Specify the dosing function as input to the compartment. Default is dose_constant. And alternative built-in function is dose_steady. If a user-defined function is specified, it needs to have parameters already built-in, ie taking only time t and mass distribution vector q arguments.
         :param dosing_time_constant:        (optional) Time constant to be used in the zeroth order default dosing function. Default: 1
+        :param dosing_time_windows:         (optional) If the dose_steady function is to be used: gives the time windows list. Default: [(0,1),(2,3)]
         :param elimination_func:            (optional) Specify the elimination function as output from the compartment. Default is first order. If a user-defined function is specified, it needs to have parameters already built-in, ie taking only time t and mass distribution vector q arguments.
         :param elimination_time_constant:   (optional) Time constant to be used in the first order default elimination function (to be divided by the volume). Default: 1
         """
         # Set up input and output functions with the given parameters
-        if dosing_func == zeroth_order:
+        if dosing_func == dose_constant:
             in_func = lambda t, q: dosing_func(t, q, dosing_time_constant)
+        elif dosing_func == dose_steady:
+            in_func = lambda t, q: dosing_func(t, q, dosing_time_constant, dosing_time_windows)
         else:
             in_func = dosing_func
         if elimination_func == first_order:
             out_func = lambda t, q: elimination_func(
-                t, q, elimination_time_constant / volume, input_index=0
+                t, q, elimination_time_constant / volume, 0
             )
         else:
             out_func = elimination_func

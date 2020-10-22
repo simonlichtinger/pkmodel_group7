@@ -27,6 +27,18 @@ def test_base_model():
     ):  # Shouldn't work because only one compartment but the given list is of length 2
         test_model.differential_eq(0, [1, 2])
 
+def test_steady_dosing():
+    from pkmodel.pkmodel import PKModel
+    from pkmodel.functions import dose_steady, zeroth_order
+
+    test_model = PKModel()
+    test_model.create_model("central", 1,dosing_func=dose_steady, dosing_time_windows=[(0,1),(3,4)])
+    
+    assert test_model.differential_eq(0.5, [1]) == [0]
+    assert test_model.differential_eq(1.5, [1]) == [-1]
+    assert test_model.differential_eq(3.5, [2]) == [-1]
+
+
 
 def test_complex_network():  # create a model with non-standard values, and parent, child and sibling
     from pkmodel.pkmodel import PKModel
