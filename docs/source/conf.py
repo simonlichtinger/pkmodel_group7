@@ -13,6 +13,10 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('../../pkmodel/__init__.py'))
+sys.path.insert(0, os.path.abspath('../../pkmodel/compartment.py'))
+sys.path.insert(0, os.path.abspath('../../pkmodel/pkanalysis.py'))
+sys.path.insert(0, os.path.abspath('../../pkmodel/pkmodel.py'))
 
 
 # -- Project information -----------------------------------------------------
