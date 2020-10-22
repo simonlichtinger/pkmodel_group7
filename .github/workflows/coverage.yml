@@ -31,3 +31,9 @@ jobs:
     - name: Run coverage
       run: |
         coverage run -m pytest tests
+    - name: Run codecov
+      if: success()
+      env:
+        CODECOV_TOKEN: "a2d2aa9f-9b97-4496-b3d5-b6ceb634ecfc"
+      run: |
+        codecov
