@@ -295,7 +295,7 @@ class PKModel:
             y0=q0,
             t_eval=t_eval,
         )
-    
+
     @property
     def get_compartment_names(self) -> list:
         """ Get names of compartments currently stored in the model.
