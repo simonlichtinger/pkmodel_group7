@@ -4,23 +4,24 @@ from .compartment import Compartment
 import scipy.integrate
 import numpy as np
 
-#from template_functions import zeroth_order 
+# from template_functions import zeroth_order
 # This would be nicer later, now just use some dummy functions for zeroth and first order to be able to implement and test
 def zeroth_order(t: float, q: list, time_constant: float) -> float:
     return time_constant
 
+
 def first_order(t: float, q: list, time_constant: float, input_index: int) -> float:
-    return time_constant* q[input_index]
+    return time_constant * q[input_index]
 
 
 class PKModel:
-    """ Class for to represent the complete PKModel. The public methods presented handle building a network of compartments
+    """Class for to represent the complete PKModel. The public methods presented handle building a network of compartments
     and connecting them with in/output functions. The differential equations for the network can then be solved using scipy.
 
     Fields:
         -   _resolving_indices:     Dictionary to map names of compartments to their indices in the list.
         -   _compartments:          List of all Compartment objects the model contains.
-    
+
     Methods:
         -   create_model:           Set up a basic one-compartment model.
         -   add_parent:             Add an upstream/parent node to an existing node.
@@ -43,8 +44,16 @@ class PKModel:
         self._compartments = []
         self._resolving_indices = dict()
 
-    def create_model(self, name: str, volume: float, dosing_func = zeroth_order, dosing_time_constant:float = 1, elimination_func = first_order, elimination_time_constant:float = 1) -> None:
-        """ Set up a basic one-compartment model, with a given compartment name. Dosing and elimination parameters
+    def create_model(
+        self,
+        name: str,
+        volume: float,
+        dosing_func=zeroth_order,
+        dosing_time_constant: float = 1,
+        elimination_func=first_order,
+        elimination_time_constant: float = 1,
+    ) -> None:
+        """Set up a basic one-compartment model, with a given compartment name. Dosing and elimination parameters
         are collected as keyword arguments.
 
         :param name:                        name of the compartment
@@ -60,7 +69,9 @@ class PKModel:
         else:
             in_func = dosing_func
         if elimination_func == first_order:
-            out_func = lambda t, q: elimination_func(t, q, elimination_time_constant/volume, input_index = 0)
+            out_func = lambda t, q: elimination_func(
+                t, q, elimination_time_constant / volume, input_index=0
+            )
         else:
             out_func = elimination_func
 
@@ -69,7 +80,7 @@ class PKModel:
         self._compartments.append(Compartment(0, volume, in_func, out_func))
 
     def _add_new_index(self, new_name: str) -> int:
-        """ Determines the index to be used for a new node, and adds its name to the dictionary.
+        """Determines the index to be used for a new node, and adds its name to the dictionary.
 
         :param new_name:    Name of the node to be created.
         :returns:           Index of the new node.
@@ -78,8 +89,16 @@ class PKModel:
         self._resolving_indices[new_name] = new_index
         return new_index
 
-    def add_parent(self, node: str, new_name: str, volume: float, connection_function=first_order, connection_time_constant:float = 1, shift_input: bool = True) -> None:
-        """ Add a new compartment and place it upstream in the graph of an existing node. If needed, the first input function
+    def add_parent(
+        self,
+        node: str,
+        new_name: str,
+        volume: float,
+        connection_function=first_order,
+        connection_time_constant: float = 1,
+        shift_input: bool = True,
+    ) -> None:
+        """Add a new compartment and place it upstream in the graph of an existing node. If needed, the first input function
         of the child is transferred to the new parent. The nodes are connected via a specified connection function.
 
         :param node:                        Name of the node to which the parent is to be attached.
@@ -95,21 +114,23 @@ class PKModel:
         old_index = self._resolving_indices[node]
 
         if connection_function == first_order:
-            connection = lambda t,q: connection_function(t, q, connection_time_constant /volume , new_index)
-        else: 
+            connection = lambda t, q: connection_function(
+                t, q, connection_time_constant / volume, new_index
+            )
+        else:
             connection = connection_function
-        
-        if shift_input: # if needed, shift the childs first input to be the new parents input
+
+        if (
+            shift_input
+        ):  # if needed, shift the childs first input to be the new parents input
             shifted_func = self._compartments[old_index].input_funcs[0]
-            new_comp = Compartment(new_index, volume, 
-                shifted_func, connection)
+            new_comp = Compartment(new_index, volume, shifted_func, connection)
             self._compartments[old_index].input_funcs[0] = connection
-        else:   
+        else:
             # create new compartment, but don't do shifting (means that new parent input will be empty, unless filled with add_input).
             # The child will then get one more connection than before.
-            
-            new_comp = Compartment(new_index, volume, 
-                None, connection)
+
+            new_comp = Compartment(new_index, volume, None, connection)
             self._compartments[old_index].input_funcs.append(connection)
 
         self._compartments.append(new_comp)
@@ -119,8 +140,17 @@ class PKModel:
         l[a], l[b] = l[b], l[a]
         return l
 
-    def add_child(self, node: str, new_name: str, volume: float, connection_function=first_order, connection_time_constant:float = 1, shift_output:bool = True, shift_correct_for_volume_change:bool = True) -> None:
-        """ Add a new compartment and place it downstream in the graph of an existing node. If needed, the first output function
+    def add_child(
+        self,
+        node: str,
+        new_name: str,
+        volume: float,
+        connection_function=first_order,
+        connection_time_constant: float = 1,
+        shift_output: bool = True,
+        shift_correct_for_volume_change: bool = True,
+    ) -> None:
+        """Add a new compartment and place it downstream in the graph of an existing node. If needed, the first output function
         of the parent is transferred to the new child. The nodes are connected via a specified connection function.
 
         :param node:                        Name of the node to which the child is to be attached.
@@ -137,35 +167,53 @@ class PKModel:
         old_index = self._resolving_indices[node]
 
         if connection_function == first_order:
-            connection = lambda t,q: connection_function(t, q, connection_time_constant / self._compartments[old_index].volume, old_index)
-        else: 
+            connection = lambda t, q: connection_function(
+                t,
+                q,
+                connection_time_constant / self._compartments[old_index].volume,
+                old_index,
+            )
+        else:
             connection = connection_function
-        
-        if shift_output: 
+
+        if shift_output:
             # if needed, shift the parents first output to be the new child's output
             # We will need to take care to permute the list indices of the differential equation, as to pass on on the correct mass distribution vector for shifting
-            temp = self._compartments[old_index].output_funcs[0]    # Needed because lambda functions are mutable in python ...
-            if shift_correct_for_volume_change:     
+            temp = self._compartments[old_index].output_funcs[
+                0
+            ]  # Needed because lambda functions are mutable in python ...
+            if shift_correct_for_volume_change:
                 # If necessary, adjust for the effect of the change in volume on the first order rate constant, assuming the time constant is the same self._permute_list_indices(q.copy(),new_index,old_index)
-                shift_function = lambda t, q: temp(t,self._permute_list_indices(q.copy(),new_index,old_index)) * self._compartments[old_index].volume / volume
+                shift_function = (
+                    lambda t, q: temp(
+                        t, self._permute_list_indices(q.copy(), new_index, old_index)
+                    )
+                    * self._compartments[old_index].volume
+                    / volume
+                )
             else:
-                shift_function = lambda t, q: temp(t,self._permute_list_indices(q.copy(),new_index,old_index))
-            new_comp = Compartment(new_index, volume, 
-                connection, shift_function)
+                shift_function = lambda t, q: temp(
+                    t, self._permute_list_indices(q.copy(), new_index, old_index)
+                )
+            new_comp = Compartment(new_index, volume, connection, shift_function)
             self._compartments[old_index].output_funcs[0] = connection
-        else:   
+        else:
             # create new compartment, but don't do shifting (means that new child output will be empty, unless filled with add_output).
             # The parent will then get one more connection than before.
-            new_comp = Compartment(new_index, volume, 
-                connection, None)
+            new_comp = Compartment(new_index, volume, connection, None)
             self._compartments[old_index].output_funcs.append(connection)
 
         self._compartments.append(new_comp)
 
-
-
-    def add_sibling(self, node: str, new_name: str, volume: float, connection_function=first_order, connection_time_constant:float = 1) -> None:
-        """ Add a new compartment and place it to the side in the graph of an existing node,
+    def add_sibling(
+        self,
+        node: str,
+        new_name: str,
+        volume: float,
+        connection_function=first_order,
+        connection_time_constant: float = 1,
+    ) -> None:
+        """Add a new compartment and place it to the side in the graph of an existing node,
         ie connected by in input <-> output equilibrium. The nodes are connected via a specified connection function.
 
         :param node:                        Name of the node to which the child is to be attached.
@@ -179,12 +227,23 @@ class PKModel:
         new_index = self._add_new_index(new_name)
         old_index = self._resolving_indices[node]
 
-        if connection_function == first_order: # Create the connection functions in both directions! out = to the sibling, in = from the sibling
-            connection_out = lambda t,q: connection_function(t, q, connection_time_constant / self._compartments[old_index].volume, old_index)
-            connection_in = lambda t,q: connection_function(t, q, connection_time_constant / volume, new_index)
-        else: 
-            raise TypeError("Connections between siblings need to be first order for equilibrium exchange! Consider adding inputs and outputs manually if you wish different behaviour.")
-        
+        if (
+            connection_function == first_order
+        ):  # Create the connection functions in both directions! out = to the sibling, in = from the sibling
+            connection_out = lambda t, q: connection_function(
+                t,
+                q,
+                connection_time_constant / self._compartments[old_index].volume,
+                old_index,
+            )
+            connection_in = lambda t, q: connection_function(
+                t, q, connection_time_constant / volume, new_index
+            )
+        else:
+            raise TypeError(
+                "Connections between siblings need to be first order for equilibrium exchange! Consider adding inputs and outputs manually if you wish different behaviour."
+            )
+
         # Add new compartment with appropriate in/out streams
         new_comp = Compartment(new_index, volume, connection_out, connection_in)
         # Add the reverse streams to the original nodes
@@ -194,7 +253,7 @@ class PKModel:
         self._compartments.append(new_comp)
 
     def add_input(self, node: str, in_func) -> None:
-        """ Add an input function to a specified node manually.
+        """Add an input function to a specified node manually.
 
         :param node:    Name of node to which the input is to be added.
         :param in_func: Input function, needs to take two positional arguments, time t and mass distribution vector q.
@@ -202,7 +261,7 @@ class PKModel:
         self._compartments[self._resolving_indices[node]].input_funcs.append(in_func)
 
     def add_output(self, node: str, out_func) -> None:
-        """ Add an output function to a specified node manually.
+        """Add an output function to a specified node manually.
 
         :param node:        Name of node to which the input is to be added.
         :param out_func:    Output function, needs to take two positional arguments, time t and mass distribution vector q.
@@ -210,25 +269,29 @@ class PKModel:
         self._compartments[self._resolving_indices[node]].output_funcs.append(out_func)
 
     def differential_eq(self, t: float, q: list) -> list:
-        """ Get the vector (list) of differential equation right hand sides, ie dq/dt, for all compartments.
+        """Get the vector (list) of differential equation right hand sides, ie dq/dt, for all compartments.
 
         :param t: Time point
         :param q: Vector (list) of drug mass in all compartments.
         :returns: List of the RHS values of the compartment differential equations.
         """
-        assert len(q) == len(self._compartments), "Need to have vector of the same dimensions as the number of compartments"
+        assert len(q) == len(
+            self._compartments
+        ), "Need to have vector of the same dimensions as the number of compartments"
         return [comp.differential_eq(t, q) for comp in self._compartments]
 
     def solve(self, t_eval: np.ndarray, q0: np.ndarray):
-        """ Solve the PKModel for a set of initial conditions over a series of time points.
+        """Solve the PKModel for a set of initial conditions over a series of time points.
 
         :param t_eval:  Array of time-points of interest
         :param q0:      Initial conditions of mass distribution in compartments. This must have the correct length of the number of compartments present.
         """
-        assert len(q0) == len(self._compartments), "Initial conditions must be of the same dimensions as the number of compartments."
+        assert len(q0) == len(
+            self._compartments
+        ), "Initial conditions must be of the same dimensions as the number of compartments."
         return scipy.integrate.solve_ivp(
             fun=self.differential_eq,
             t_span=[t_eval[0], t_eval[-1]],
-            y0=q0, 
-            t_eval=t_eval
+            y0=q0,
+            t_eval=t_eval,
         )
