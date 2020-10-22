@@ -291,6 +291,7 @@ class PKModel:
         :param out_func:    Output function, needs to take two positional arguments, time t and mass distribution vector q.
         """
         self._compartments[self._resolving_indices[node]].output_funcs.append(out_func)
+        self._network_edges.append(("unk. input",node))
 
     def differential_eq(self, t: float, q: list) -> list:
         """Get the vector (list) of differential equation right hand sides, ie dq/dt, for all compartments.
@@ -344,11 +345,11 @@ class PKModel:
         pos = nx.spectral_layout(G)  # positions for all nodes
 
         nx.draw_networkx_nodes(G, pos, node_size=0)
-
         nx.draw_networkx_edges(G, pos, 
-        width=2,arrowstyle="->",arrowsize=20, 
-        min_source_margin=30, min_target_margin=30,
-        connectionstyle='arc3,rad=0.2')
+            width=2,arrowstyle="->",arrowsize=20, 
+            min_source_margin=30, min_target_margin=30,
+            connectionstyle='arc3,rad=0.2'
+        )
 
         nx.draw_networkx_labels(G, pos, font_size=12, font_family="sans-serif")
 
