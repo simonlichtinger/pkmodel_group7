@@ -6,7 +6,7 @@ import numpy as np
 
 
 def test_base_model():
-    from ..pkmodel import PKModel
+    from pkmodel.pkmodel import PKModel
 
     test_model = PKModel()
     test_model.create_model(
@@ -29,7 +29,7 @@ def test_base_model():
 
 
 def test_complex_network():  # create a model with non-standard values, and parent, child and sibling
-    from ..pkmodel import PKModel
+    from pkmodel.pkmodel import PKModel
 
     test_model = PKModel()
     test_model.create_model(
@@ -51,7 +51,7 @@ def util2(t, q):
 
 
 def test_custom_functions():  # create a simple model, but use all non-standard functions, and create extra in/outputs
-    from ..pkmodel import PKModel
+    from pkmodel.pkmodel import PKModel
 
     test_model = PKModel()
     test_model.create_model("main", 1, dosing_func=util1, elimination_func=util2)
@@ -105,7 +105,7 @@ def rhs(t, y, Q_p1, V_c, V_p1, CL, X):
 
 
 def test_against_prototype():  # Test against model 1 of the prototype
-    from ..pkmodel import PKModel
+    from pkmodel.pkmodel import PKModel
 
     test_model = PKModel()
     test_model.create_model("main", 1)
