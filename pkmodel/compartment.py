@@ -25,8 +25,8 @@ class Compartment:
         :param in_func: First input function the Compartment is set up with, eg. dosing function.
         :param out_func: First output function the Compartment is set up with, eg. circulation elimination.
         """
-        self.input_funcs = [in_func] if in_func != None else []
-        self.output_funcs = [out_func] if out_func != None else []
+        self.input_funcs = [in_func] if in_func is not None else []
+        self.output_funcs = [out_func] if out_func is not None else []
         self.index = index
         self.volume = volume
 
