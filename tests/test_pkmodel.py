@@ -30,7 +30,7 @@ def test_base_model():
 
 def test_steady_dosing():
     from pkmodel.pkmodel import PKModel
-    from pkmodel.functions import dose_steady, zeroth_order
+    from pkmodel.functions import dose_steady
 
     test_model = PKModel()
     test_model.create_model(
