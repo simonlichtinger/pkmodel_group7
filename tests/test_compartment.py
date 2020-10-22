@@ -2,12 +2,15 @@
 
 import pytest
 
+
 def test_simple_differential_eq():
     from pkmodel.compartment import Compartment
+
     test_compartment = Compartment(0, 1, lambda t, q: 1, lambda t, q: q[0])
 
     assert test_compartment.differential_eq(0, [0]) == 1
     assert test_compartment.differential_eq(0, [2]) == -1
+
 
 def test_invalid_function_input():
     from pkmodel.compartment import Compartment

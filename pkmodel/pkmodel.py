@@ -43,7 +43,7 @@ class PKModel:
         volume: float,
         dosing_func=dose_constant,
         dosing_time_constant: float = 1,
-        dosing_time_windows: list = [(0,1),(2,3)],
+        dosing_time_windows: list = [(0, 1), (2, 3)],
         elimination_func=first_order,
         elimination_time_constant: float = 1,
     ) -> None:
@@ -62,7 +62,9 @@ class PKModel:
         if dosing_func == dose_constant:
             in_func = lambda t, q: dosing_func(t, q, dosing_time_constant)
         elif dosing_func == dose_steady:
-            in_func = lambda t, q: dosing_func(t, q, dosing_time_constant, dosing_time_windows)
+            in_func = lambda t, q: dosing_func(
+                t, q, dosing_time_constant, dosing_time_windows
+            )
         else:
             in_func = dosing_func
         if elimination_func == first_order:
