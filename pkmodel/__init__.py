@@ -8,4 +8,3 @@ of Parmokinetic (PK) models
 from .version_info import VERSION_INT, VERSION  # noqa
 
 # Import main classes
-
