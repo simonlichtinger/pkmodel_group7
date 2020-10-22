@@ -133,3 +133,13 @@ def test_against_prototype():  # Test against model 1 of the prototype
     model_out = test_model.solve(np.linspace(0, 1, 1000), np.array([0.0, 0.0]))
 
     assert proto_out.y.all() == model_out.y.all()
+
+def test_network_graph():
+    from pkmodel.pkmodel import PKModel
+
+    test_model = PKModel()
+    test_model.create_model("main", 1)
+    test_model.add_parent("main", "parent", 1)
+    test_model.add_child("main", "child", 1 / 3)
+    test_model.add_sibling("main", "sibling", 0.5)
+    test_model.draw_network(testing=True)

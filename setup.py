@@ -64,6 +64,7 @@ setup(
         'numpy',
         'matplotlib',
         'scipy',
+        'networkx'
     ],
     extras_require={
         'docs': [
