@@ -1,6 +1,7 @@
 # This will hold visualisation code
 import matplotlib.pyplot as plt
 
+
 def plot_solution(solution, names):
     """this plots the models"""
     for i in range(solution.y.shape[0]):
@@ -10,5 +11,3 @@ def plot_solution(solution, names):
         plt.ylabel("drug mass [ng]")
         plt.xlabel("time [h]")
     plt.show()
-
-    
