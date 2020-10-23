@@ -3,17 +3,21 @@
 from .compartment import Compartment
 import scipy.integrate
 import numpy as np
+import networkx as nx
+import matplotlib.pyplot as plt
 
 from .functions import first_order, dose_constant, dose_steady
 
 
 class PKModel:
-    """Class for to represent the complete PKModel. The public methods presented handle building a network of compartments
+    """Class to represent the complete PKModel. The public methods presented handle building a network of compartments
     and connecting them with in/output functions. The differential equations for the network can then be solved using scipy.
 
     Fields:
         -   _resolving_indices:     Dictionary to map names of compartments to their indices in the list.
         -   _compartments:          List of all Compartment objects the model contains.
+        -   _network_edges:         Keeps track of all newly generated network edges for the purpose of later drawing.
+        -   _in_edge / _out_edge:   Keeps track of special -- potentially shifted -- in/out edges.
 
     Methods:
         -   create_model:           Set up a basic one-compartment model.
@@ -28,7 +32,7 @@ class PKModel:
         -   __init__:               Basic initialisation, no model created.
         -   __add_new_index:        Utility method to handle insertion of a new node into the dictionary.
         -   _permute_list_indices:  Simple utility to permute two list indices.
-
+        -   draw_network:           This uses networkx to draw a map of the model
     Properties:
         -   get_compartment_names:  Returns a list of all compartment names of the model, in order of their index.
     """
@@ -37,6 +41,9 @@ class PKModel:
         """ Very basic init, doesn't create any model -> need to create model by create_model or load_json."""
         self._compartments = []
         self._resolving_indices = dict()
+        self._network_edges = []
+        self._in_edge = None
+        self._out_edge = None
 
     def create_model(
         self,
@@ -78,6 +85,10 @@ class PKModel:
         # Create compartment and add index to the dictionary of indices by name
         self._resolving_indices[name] = 0
         self._compartments.append(Compartment(0, volume, in_func, out_func))
+
+        # Add default in/out edges for network drawing
+        self._in_edge = ("", name)
+        self._out_edge = (name, "")
 
     def _add_new_index(self, new_name: str) -> int:
         """Determines the index to be used for a new node, and adds its name to the dictionary.
@@ -126,6 +137,7 @@ class PKModel:
             shifted_func = self._compartments[old_index].input_funcs[0]
             new_comp = Compartment(new_index, volume, shifted_func, connection)
             self._compartments[old_index].input_funcs[0] = connection
+            self._in_edge = ("", new_name)
         else:
             # create new compartment, but don't do shifting (means that new parent input will be empty, unless filled with add_input).
             # The child will then get one more connection than before.
@@ -134,6 +146,9 @@ class PKModel:
             self._compartments[old_index].input_funcs.append(connection)
 
         self._compartments.append(new_comp)
+
+        # Add appropriate network edge
+        self._network_edges.append((new_name, node))
 
     def _permute_list_indices(self, l: list, a: int, b: int) -> list:
         """ Little helper function to permute two indices of a list """
@@ -197,6 +212,7 @@ class PKModel:
                 )
             new_comp = Compartment(new_index, volume, connection, shift_function)
             self._compartments[old_index].output_funcs[0] = connection
+            self._out_edge = (new_name, "")
         else:
             # create new compartment, but don't do shifting (means that new child output will be empty, unless filled with add_output).
             # The parent will then get one more connection than before.
@@ -204,6 +220,9 @@ class PKModel:
             self._compartments[old_index].output_funcs.append(connection)
 
         self._compartments.append(new_comp)
+
+        # Add appropriate network edge
+        self._network_edges.append((node, new_name))
 
     def add_sibling(
         self,
@@ -252,21 +271,29 @@ class PKModel:
 
         self._compartments.append(new_comp)
 
-    def add_input(self, node: str, in_func) -> None:
+        # Add network double edge
+        self._network_edges.append((node, new_name))
+        self._network_edges.append((new_name, node))
+
+    def add_input(self, node: str, in_func, label: str = "unk. input") -> None:
         """Add an input function to a specified node manually.
 
         :param node:    Name of node to which the input is to be added.
         :param in_func: Input function, needs to take two positional arguments, time t and mass distribution vector q.
+        :param label:   (optional) Label to be used for input in graph drawing.
         """
         self._compartments[self._resolving_indices[node]].input_funcs.append(in_func)
+        self._network_edges.append((label, node))
 
-    def add_output(self, node: str, out_func) -> None:
+    def add_output(self, node: str, out_func, label: str = "unk. output") -> None:
         """Add an output function to a specified node manually.
 
         :param node:        Name of node to which the input is to be added.
         :param out_func:    Output function, needs to take two positional arguments, time t and mass distribution vector q.
+        :param label:       (optional) Label to be used for output in graph drawing.
         """
         self._compartments[self._resolving_indices[node]].output_funcs.append(out_func)
+        self._network_edges.append((node, label))
 
     def differential_eq(self, t: float, q: list) -> list:
         """Get the vector (list) of differential equation right hand sides, ie dq/dt, for all compartments.
@@ -298,8 +325,41 @@ class PKModel:
 
     @property
     def get_compartment_names(self) -> list:
-        """ Get names of compartments currently stored in the model.
+        """Get names of compartments currently stored in the model.
 
         :returns:   list of all keys of the dictionary holding the names of compartments.
         """
         return list(self._resolving_indices.keys())
+
+    def draw_network(self, testing=False, layout=nx.spectral_layout) -> None:
+        """Uses networkx to plot a graphical outline of the generated network.
+
+        :param testing: (optional) When testing in continuous integration, can't plot.
+        :param layout:  (optional) Provide details of wanted networkx layout.
+        """
+        G = nx.DiGraph()
+
+        # Collect previously defined edges
+        for edge in self._network_edges:
+            G.add_edge(edge[0], edge[1])
+        G.add_edge(self._in_edge[0], self._in_edge[1])
+        G.add_edge(self._out_edge[0], self._out_edge[1])
+
+        pos = layout(G)  # positions for all nodes
+
+        nx.draw_networkx_nodes(G, pos, node_size=0)
+        nx.draw_networkx_edges(
+            G,
+            pos,
+            width=2,
+            arrowstyle="->",
+            arrowsize=20,
+            min_source_margin=30,
+            min_target_margin=30,
+            connectionstyle="arc3,rad=0.2",
+        )
+
+        nx.draw_networkx_labels(G, pos, font_size=12, font_family="sans-serif")
+
+        if not testing:
+            plt.show()
