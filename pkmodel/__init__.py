@@ -3,7 +3,7 @@
 It contains functionality for creating, solving, and visualising the solution
 of pharmacokinetic (PK) models.
 
-A quick tutorial for usage can be found on https://github.com/simonlichtinger/pkmodel_group7/TUTORIAL.md
+A quick tutorial for usage can be found on https://github.com/simonlichtinger/pkmodel_group7/blob/master/TUTORIAL.md
 
 """
 # Import version info
