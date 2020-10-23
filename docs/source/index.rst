@@ -4,8 +4,6 @@
 Welcome to the Team 7 PK Model documentation!
 ========================================
 
-Hello world
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
