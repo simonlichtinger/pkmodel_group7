@@ -7,7 +7,7 @@
 
 We present the open-source **pkmodel** library. This software can model and numerically solve pharmacokinetic system of arbitrary complexity by using an object-oriented approach to representing compartments.
 
-Install by ``` python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps pkmodel_group7 ```
+Install by ``` pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple pkmodel_group7 ```
 
 As a quick-start, read the TUTORIAL.md.
 
