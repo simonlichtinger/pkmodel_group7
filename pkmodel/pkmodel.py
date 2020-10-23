@@ -298,7 +298,7 @@ class PKModel:
 
     @property
     def get_compartment_names(self) -> list:
-        """ Get names of compartments currently stored in the model.
+        """Get names of compartments currently stored in the model.
 
         :returns:   list of all keys of the dictionary holding the names of compartments.
         """
