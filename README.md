@@ -1,5 +1,4 @@
 ![Style test (flake8)](https://github.com/simonlichtinger/pkmodel_group7/workflows/Style%20test%20(flake8)/badge.svg)
-![Coverage](https://github.com/simonlichtinger/pkmodel_group7/workflows/Coverage/badge.svg)
 ![Run unit tests with OS coverage](https://github.com/simonlichtinger/pkmodel_group7/workflows/Run%20unit%20tests%20with%20OS%20coverage/badge.svg)
 ![Run unit tests with python coverage](https://github.com/simonlichtinger/pkmodel_group7/workflows/Run%20unit%20tests%20with%20python%20coverage/badge.svg)
 [![codecov](https://codecov.io/gh/simonlichtinger/pkmodel_group7/branch/master/graph/badge.svg?token=OGKG136MZJ)](undefined)
