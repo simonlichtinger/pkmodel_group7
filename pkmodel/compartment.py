@@ -2,7 +2,7 @@
 
 
 class Compartment:
-    """Class to represent a pharmacological compartment, to used in generating
+    """Class to represent a pharmacological compartment, to be used in generating
     a graph of compartments in the PKModel class. Functionality is to sum
     up the appropriate partial differential equation for this compartment.
 
