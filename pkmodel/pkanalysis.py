@@ -4,14 +4,21 @@ import numpy as np
 
 
 def plot_solution(solution, names):
-    """
-    this plots the outpu of the models as the results are generated from the other
+    """Simple plot functionality
 
+    this plots the evolution of the drug concentration and states whether equilibrium was reached
+    within the simulation time
+
+    :param solution:   solution object containing time and all concentrations
+    :param names:      name of the compartment
+    :returns:          plot
 
     """
+    # Equilibrium will be considered reached if the numerical derivative is less than 0.001, this will be
+    # output in the title
     numDiv = np.diff(solution.y) / np.diff(solution.t)
     LastDivElem = numDiv[:, -1]
-    if all(i < 0.001 for i in LastDivElem):
+    if all(i < 0.01 for i in LastDivElem):
         eqiFlag = "Equilibrium reached"
     else:
         eqiFlag = "Equilibrium not reached"
