@@ -275,23 +275,23 @@ class PKModel:
         self._network_edges.append((node, new_name))
         self._network_edges.append((new_name, node))
 
-    def add_input(self, node: str, in_func) -> None:
+    def add_input(self, node: str, in_func, label: str = "unk. input") -> None:
         """Add an input function to a specified node manually.
 
         :param node:    Name of node to which the input is to be added.
         :param in_func: Input function, needs to take two positional arguments, time t and mass distribution vector q.
         """
         self._compartments[self._resolving_indices[node]].input_funcs.append(in_func)
-        self._network_edges.append(("unk. input",node))
+        self._network_edges.append((label,node))
 
-    def add_output(self, node: str, out_func) -> None:
+    def add_output(self, node: str, out_func, label: str = "unk. output") -> None:
         """Add an output function to a specified node manually.
 
         :param node:        Name of node to which the input is to be added.
         :param out_func:    Output function, needs to take two positional arguments, time t and mass distribution vector q.
         """
         self._compartments[self._resolving_indices[node]].output_funcs.append(out_func)
-        self._network_edges.append(("unk. input",node))
+        self._network_edges.append((node, label))
 
     def differential_eq(self, t: float, q: list) -> list:
         """Get the vector (list) of differential equation right hand sides, ie dq/dt, for all compartments.
