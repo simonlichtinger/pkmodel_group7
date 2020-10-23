@@ -1,5 +1,3 @@
-from pkmodel.pkmodel import PKModel
-
 
 # Importing all required applications/libraries
 # To see the plots with titles, and axis labels as well as implemented positioning of the graph key
