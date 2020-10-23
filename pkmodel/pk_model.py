@@ -280,6 +280,7 @@ class PKModel:
 
         :param node:    Name of node to which the input is to be added.
         :param in_func: Input function, needs to take two positional arguments, time t and mass distribution vector q.
+        :param label:   (optional) Label to be used for input in graph drawing.
         """
         self._compartments[self._resolving_indices[node]].input_funcs.append(in_func)
         self._network_edges.append((label,node))
@@ -289,6 +290,7 @@ class PKModel:
 
         :param node:        Name of node to which the input is to be added.
         :param out_func:    Output function, needs to take two positional arguments, time t and mass distribution vector q.
+        :param label:       (optional) Label to be used for output in graph drawing.
         """
         self._compartments[self._resolving_indices[node]].output_funcs.append(out_func)
         self._network_edges.append((node, label))
@@ -329,10 +331,11 @@ class PKModel:
         """
         return list(self._resolving_indices.keys())
 
-    def draw_network(self, testing=False) -> None:
+    def draw_network(self, testing=False, layout= nx.spectral_layout) -> None:
         """ Uses networkx to plot a graphical outline of the generated network.
 
         :param testing: (optional) When testing in continuous integration, can't plot.
+        :param layout:  (optional) Provide details of wanted networkx layout.
         """
         G = nx.DiGraph()
 
@@ -342,7 +345,7 @@ class PKModel:
         G.add_edge(self._in_edge[0], self._in_edge[1])
         G.add_edge(self._out_edge[0], self._out_edge[1])
 
-        pos = nx.spectral_layout(G)  # positions for all nodes
+        pos = layout(G)  # positions for all nodes
 
         nx.draw_networkx_nodes(G, pos, node_size=0)
         nx.draw_networkx_edges(G, pos, width=2,arrowstyle="->",arrowsize=20, min_source_margin=30, min_target_margin=30, connectionstyle='arc3,rad=0.2')
