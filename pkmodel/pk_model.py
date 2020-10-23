@@ -10,7 +10,7 @@ from .functions import first_order, dose_constant, dose_steady
 
 
 class PKModel:
-    """Class for to represent the complete PKModel. The public methods presented handle building a network of compartments
+    """Class to represent the complete PKModel. The public methods presented handle building a network of compartments
     and connecting them with in/output functions. The differential equations for the network can then be solved using scipy.
 
     Fields:
