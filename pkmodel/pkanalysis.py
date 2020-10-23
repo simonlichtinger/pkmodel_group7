@@ -2,8 +2,10 @@
 import matplotlib.pyplot as plt
 
 
-def plot_solution(solution, names, time_units="time units", mass_units="mass units", title="PK Model"):
-    """ Method to plot the solution object returned by PKModel.solve() as a mass / time graph
+def plot_solution(
+    solution, names, time_units="time units", mass_units="mass units", title="PK Model"
+):
+    """Method to plot the solution object returned by PKModel.solve() as a mass / time graph
     including different compartments.
 
     :param solution:        Solution object returned by PKModel.solve()
@@ -12,11 +14,11 @@ def plot_solution(solution, names, time_units="time units", mass_units="mass uni
     :param mass_units:      (optional) Units for mass to be displayed in the axis label. Default = 'mass units'.
     :param title:           (optional) Title of the plot.
     """
-    
+
     for i in range(solution.y.shape[0]):
         plt.plot(solution.t, solution.y[i, :], label=names[i])
         plt.legend(names)
         plt.title(title)
-        plt.ylabel("Drug mass ["+mass_units+"]")
-        plt.xlabel("Time ["+time_units+"]")
+        plt.ylabel("Drug mass [" + mass_units + "]")
+        plt.xlabel("Time [" + time_units + "]")
     plt.show()
