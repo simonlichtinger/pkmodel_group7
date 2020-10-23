@@ -10,6 +10,9 @@ Welcome to PK Modelling's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+.. automodule:: pkmodel
+   :members:
+
 Compartment
 =====================
 .. py:module:: compartment
@@ -23,7 +26,7 @@ PK Analysis
 
 PK Model
 ===================
-.. automodule:: pkmodel
+.. automodule:: pkmodel.pk_model
    :members:
    
 
