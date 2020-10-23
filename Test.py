@@ -1,5 +1,4 @@
 from pkmodel.pkmodel import PKModel
-import matplotlib.pyplot as plt
 import numpy as np
 from pkmodel.pkanalysis import plot_solution
 
