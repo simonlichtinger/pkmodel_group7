@@ -39,7 +39,7 @@ setup(
     # Version
     version=get_version(),
 
-    description='An example Python project.',
+    description='A flexible pharmacokinetic modelling libary',
 
     long_description=get_readme(),
 
@@ -49,9 +49,9 @@ setup(
 
     # author_email='',
 
-    maintainer='Martin Robinson',
+    maintainer='Simon Lichtinger',
 
-    maintainer_email='martin.robinson@cs.ox.ac.uk',
+    maintainer_email='simon.lichtinger@sjc.ox.ac.uk',
 
     url='https://github.com/SABS-R3/2020-software-engineering-projects-pk',
 
@@ -64,7 +64,7 @@ setup(
         'numpy',
         'matplotlib',
         'scipy',
-        'networkx'
+        'networkx',
     ],
     extras_require={
         'docs': [
