@@ -148,7 +148,7 @@ class PKModel:
         self._compartments.append(new_comp)
 
         # Add appropriate network edge
-        self._network_edges.append((new_name,node))
+        self._network_edges.append((new_name, node))
 
     def _permute_list_indices(self, l: list, a: int, b: int) -> list:
         """ Little helper function to permute two indices of a list """
@@ -222,7 +222,7 @@ class PKModel:
         self._compartments.append(new_comp)
 
         # Add appropriate network edge
-        self._network_edges.append((node,new_name))
+        self._network_edges.append((node, new_name))
 
     def add_sibling(
         self,
@@ -283,7 +283,7 @@ class PKModel:
         :param label:   (optional) Label to be used for input in graph drawing.
         """
         self._compartments[self._resolving_indices[node]].input_funcs.append(in_func)
-        self._network_edges.append((label,node))
+        self._network_edges.append((label, node))
 
     def add_output(self, node: str, out_func, label: str = "unk. output") -> None:
         """Add an output function to a specified node manually.
@@ -325,14 +325,14 @@ class PKModel:
 
     @property
     def get_compartment_names(self) -> list:
-        """ Get names of compartments currently stored in the model.
+        """Get names of compartments currently stored in the model.
 
         :returns:   list of all keys of the dictionary holding the names of compartments.
         """
         return list(self._resolving_indices.keys())
 
-    def draw_network(self, testing=False, layout= nx.spectral_layout) -> None:
-        """ Uses networkx to plot a graphical outline of the generated network.
+    def draw_network(self, testing=False, layout=nx.spectral_layout) -> None:
+        """Uses networkx to plot a graphical outline of the generated network.
 
         :param testing: (optional) When testing in continuous integration, can't plot.
         :param layout:  (optional) Provide details of wanted networkx layout.
@@ -348,7 +348,16 @@ class PKModel:
         pos = layout(G)  # positions for all nodes
 
         nx.draw_networkx_nodes(G, pos, node_size=0)
-        nx.draw_networkx_edges(G, pos, width=2,arrowstyle="->",arrowsize=20, min_source_margin=30, min_target_margin=30, connectionstyle='arc3,rad=0.2')
+        nx.draw_networkx_edges(
+            G,
+            pos,
+            width=2,
+            arrowstyle="->",
+            arrowsize=20,
+            min_source_margin=30,
+            min_target_margin=30,
+            connectionstyle="arc3,rad=0.2",
+        )
 
         nx.draw_networkx_labels(G, pos, font_size=12, font_family="sans-serif")
 
