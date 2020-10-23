@@ -10,14 +10,22 @@ Welcome to PK Modelling's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-.. automodule:: compartment
+Compartment
+=====================
+.. py:module:: compartment
+.. autoclass:: Compartment
    :members:
 
+PK Analysis
+=================
 .. automodule:: pkanalysis
    :members:
 
+PK Model
+===================
 .. automodule:: pkmodel
    :members:
+   
 
 Indices and tables
 ==================
