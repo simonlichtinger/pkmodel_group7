@@ -8,3 +8,8 @@ of Parmokinetic (PK) models
 from .version_info import VERSION_INT, VERSION  # noqa
 
 # Import main classes
+
+from .pk_model import PKModel
+from .compartment import Compartment
+from .functions import zeroth_order, first_order, dose_constant, dose_steady
+from .pkanalysis import plot_solution
