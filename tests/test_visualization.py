@@ -6,5 +6,5 @@ def test_plot():
     test_model = PKModel()
     test_model.create_model("central", 1)
     model_out = test_model.solve(np.linspace(0, 1, 1000), np.array([0.0]))
-    plot_solution(model_out, test_model.get_compartment_names)
+    plot_solution(model_out, test_model.get_compartment_names, testing=True)
     assert True
